@@ -1,0 +1,14 @@
+{
+  "name": "ts-decorators-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node index.js"
+  },
+  "dependencies": {
+    "typescript": "^4.0.3"
+  }
+}
