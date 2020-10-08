@@ -1,31 +1,41 @@
-interface Tasks {
+import Axios from "axios"
+
+interface Posts {
   id: string;
-  createdAt: Date;
-  done: boolean;
+  userId: string,
+  title: string;
+  body: string;
 }
 
-function Get(url: string) {
+function Service(baseUrl: string) {
+  return function <T extends { new(...args: any[]): {} }>(constructor: T) {
+    return class extends constructor {
+      baseUrl = baseUrl
+    }
+  }
+}
+
+function Get(path: string) {
   return function (target: any, name: string) {
-    const fetch = () => Promise.resolve([
-      { id: 0, createdAt: new Date(), done: false }
-    ])
+    const fetch = (baseUrl: string) => Axios.get(`${baseUrl}${path}`)
 
     Object.defineProperty(target, name, {
       get() {
-        return fetch()
+        return fetch(this.baseUrl)
       }
     })
   }
 }
 
-class TaskService {
-  @Get('/tasks')
-  tasks!: Promise<Tasks[]>;
+@Service('https://jsonplaceholder.typicode.com')
+class PlaceholderService {
+  @Get('/posts')
+  posts!: Promise<Posts[]>;
 }
 
-const tasksService = new TaskService();
+const svc = new PlaceholderService();
 
 (async () => {
-  const tasks = await tasksService.tasks
-  console.log(tasks)
+  const posts = await svc.posts
+  console.log(posts)
 })()
