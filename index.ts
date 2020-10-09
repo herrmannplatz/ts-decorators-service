@@ -7,6 +7,14 @@ interface Posts {
   body: string;
 }
 
+interface Comment {
+  id: string;
+  postId: string,
+  name: string;
+  email: string;
+  body: string;
+}
+
 function Service(baseUrl: string) {
   return function <T extends { new(...args: any[]): {} }>(constructor: T) {
     return class extends constructor {
@@ -31,6 +39,9 @@ function Get(path: string) {
 class PlaceholderService {
   @Get('/posts')
   posts!: Promise<Posts[]>;
+
+  @Get('/comments')
+  comments!: Promise<Comment[]>;
 }
 
 const svc = new PlaceholderService();
@@ -38,4 +49,7 @@ const svc = new PlaceholderService();
 (async () => {
   const posts = await svc.posts
   console.log(posts)
+
+  const comments = await svc.comments
+  console.log(comments)
 })()
